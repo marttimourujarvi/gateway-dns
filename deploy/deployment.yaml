@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: httproute-dns
+  name: httproute-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httproute-dns
+  template:
+    metadata:
+      labels:
+        app: httproute-dns
+    spec:
+      serviceAccount: httproute-dns
+      containers:
+      - image: mmouru/httproute-dns
+        name: dns-store
+

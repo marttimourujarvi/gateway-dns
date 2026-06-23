@@ -1,0 +1,64 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"log/slog"
+	"os"
+
+	"github.com/marttimourujarvi/httproute-dns/internal/controller"
+	"github.com/marttimourujarvi/httproute-dns/internal/dnsstore"
+	"github.com/marttimourujarvi/httproute-dns/internal/server"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
+)
+
+func main() {
+	ctrl.SetLogger(zap.New())
+
+	// Single in-memory store shared by the DNS server and the reconciler.
+	store := dnsstore.NewStore()
+
+	fmt.Print(dnsstore.Banner)
+	// Start the DNS server in the background.
+	go func() {
+		srv := server.New("0.0.0.0:5353", store)
+		log.Println("DNS server listening on :5353 (udp)")
+		if err := srv.ListenAndServe(); err != nil {
+			log.Fatalf("dns server failed: %v", err)
+		}
+	}()
+
+	// Start the controller-runtime manager (blocks until signalled).
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{})
+	if err != nil {
+		ctrl.Log.Error(err, "unable to start manager")
+		log.Fatal(err)
+	}
+
+	// Register Gateway API types with the scheme.
+	if err := gatewayv1.Install(mgr.GetScheme()); err != nil {
+		ctrl.Log.Error(err, "unable to add Gateway API scheme")
+		log.Fatal(err)
+	}
+
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	})).With("component", "fqdn-reconciler")
+
+	if err := (&controller.FQDNReconciler{
+		Client:   mgr.GetClient(),
+		DNSStore: store,
+		Logger:   logger,
+	}).SetupWithManager(mgr); err != nil {
+		ctrl.Log.Error(err, "unable to create controller")
+		log.Fatal(err)
+	}
+
+	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
+		ctrl.Log.Error(err, "problem running manager")
+		log.Fatal(err)
+	}
+}
