@@ -1,0 +1,8 @@
+gateway-dns
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
