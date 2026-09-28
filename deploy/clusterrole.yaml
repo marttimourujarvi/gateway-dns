@@ -4,8 +4,8 @@ metadata:
   name: httproute-dns
 rules:
   - apiGroups: ["gateway.networking.k8s.io"]
-    resources: ["httproutes", "gateways"]
+    resources: ["httproutes", "grpcroutes", "gateways"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["gateway.networking.k8s.io"]
-    resources: ["httproutes"]
+    resources: ["httproutes", "grpcroutes"]
     verbs: ["update"]  # for finalizers
