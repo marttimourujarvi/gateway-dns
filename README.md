@@ -10,7 +10,7 @@
 ::...::::::::::::::::::::::::::::::::::::::::...::::::::::::::::::::::::::::
 ```
 
-# httproute-dns
+# gateway-dns
 
 A lightweight in-cluster DNS server that automatically resolves hostnames from Kubernetes Gateway API resources (`HTTPRoute`, `GRPCRoute`) to the IPv4 addresses of their parent `Gateway`.
 
