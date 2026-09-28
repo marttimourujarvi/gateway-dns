@@ -6,3 +6,4 @@ gateway-dns
 *.test
 *.out
 vendor/
+testing/**
