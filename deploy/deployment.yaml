@@ -16,6 +16,10 @@ spec:
     spec:
       serviceAccount: httproute-dns
       containers:
-      - image: mmouru/httproute-dns
+      - image: gateway-dns:latest #mmouru/httproute-dns:0.1.0
+        imagePullPolicy: Never
         name: dns-store
+        ports:
+        - containerPort: 53
+          protocol: UDP
 
