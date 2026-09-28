@@ -1,12 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Git tag to release (e.g. v1.0.0)"
-        required: true
-        type: string
+  push:
+    tags:
+      - "v*"
 
 env:
   REGISTRY: docker.io
@@ -19,8 +16,6 @@ jobs:
     steps:
       - name: Checkout tag
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -40,8 +35,8 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ inputs.tag }}
-            type=raw,value=latest,enable=${{ !contains(inputs.tag, '-') }}
+            type=raw,value=${{ github.ref_name }}
+            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
