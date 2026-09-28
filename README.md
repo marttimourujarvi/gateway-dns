@@ -52,4 +52,3 @@ A Dockerfile and deploy manifests are included. See `deploy/` and `Makefile` for
 | `internal/dnsstore/store.go`  | Thread-safe in-memory A-record store      |
 | `internal/controller/`        | Gateway API reconciler                    |
 | `deploy/`                     | Kubernetes manifests                      |
-| `testing/`                    | Test helpers                              |
