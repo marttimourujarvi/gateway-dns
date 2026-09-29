@@ -41,6 +41,10 @@ dig @127.0.0.1 -p 5353 <hostname-from-httproute>
 
 ## Deploy
 
+```bash
+kubectl apply -f https://raw.githubusercontent.com/marttimourujarvi/gateway-dns/refs/heads/main/deploy/resources.yaml
+```
+
 A Dockerfile and deploy manifests are included. See `deploy/` and `Makefile` for kind-based workflow.
 
 ## Project layout
