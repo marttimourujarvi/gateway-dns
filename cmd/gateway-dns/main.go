@@ -15,6 +15,8 @@ import (
 	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 )
 
+const PORT = "5353"
+
 func main() {
 	ctrl.SetLogger(zap.New())
 
@@ -24,8 +26,8 @@ func main() {
 	fmt.Print(dnsstore.Banner)
 	// Start the DNS server in the background.
 	go func() {
-		srv := server.New("0.0.0.0:5353", store)
-		log.Println("DNS server listening on :5353 (udp)")
+		srv := server.New(fmt.Sprintf("0.0.0.0:%s", PORT), store)
+		log.Println(fmt.Sprintf("DNS server listening on %s (udp)", PORT))
 		if err := srv.ListenAndServe(); err != nil {
 			log.Fatalf("dns server failed: %v", err)
 		}
