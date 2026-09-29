@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: httproute-dns
+  name: gateway-dns
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: httproute-dns
-  namespace: httproute-dns
+  name: gateway-dns
+  namespace: gateway-dns
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: httproute-dns
+  name: gateway-dns
 rules:
   - apiGroups: ["gateway.networking.k8s.io"]
     resources: ["httproutes", "grpcroutes", "gateways"]
@@ -24,55 +24,56 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: httproute-dns
+  name: gateway-dns
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: httproute-dns
+  name: gateway-dns
 subjects:
   - kind: ServiceAccount
-    name: httproute-dns
-    namespace: httproute-dns
+    name: gateway-dns
+    namespace: gateway-dns
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: httproute-dns
-  name: httproute-dns
-  namespace: httproute-dns
+    app: gateway-dns
+  name: gateway-dns
+  namespace: gateway-dns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: httproute-dns
+      app: gateway-dns
   template:
     metadata:
       labels:
-        app: httproute-dns
+        app: gateway-dns
     spec:
-      serviceAccount: httproute-dns
+      serviceAccount: gateway-dns
       containers:
-      - image: gateway-dns:latest #mmouru/httproute-dns:0.1.0
-        imagePullPolicy: Never
+      - image: mmouru/gateway-dns:latest
         name: dns-store
         ports:
         - containerPort: 5353
           protocol: UDP
+          name: dns-udp
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: httproute-dns
-  name: httproute-dns
+    app: gateway-dns
+  name: gateway-dns
+  namespace: gateway-dns
 spec:
   type: LoadBalancer
   selector:
-    app: httproute-dns
+    app: gateway-dns
   ports:
   - name: dns-udp
     protocol: UDP
     port: 53
-    targetPort: 5353
+    targetPort: dns-udp
 
