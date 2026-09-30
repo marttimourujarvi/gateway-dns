@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/marttimourujarvi/httproute-dns/internal/controller"
-	"github.com/marttimourujarvi/httproute-dns/internal/dnsstore"
-	"github.com/marttimourujarvi/httproute-dns/internal/server"
+	"github.com/marttimourujarvi/gateway-dns/internal/controller"
+	"github.com/marttimourujarvi/gateway-dns/internal/dnsstore"
+	"github.com/marttimourujarvi/gateway-dns/internal/server"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"

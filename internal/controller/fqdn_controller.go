@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/marttimourujarvi/httproute-dns/internal/dnsstore"
+	"github.com/marttimourujarvi/gateway-dns/internal/dnsstore"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"

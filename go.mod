@@ -1,4 +1,4 @@
-module github.com/marttimourujarvi/httproute-dns
+module github.com/marttimourujarvi/gateway-dns
 
 go 1.26.4
 
