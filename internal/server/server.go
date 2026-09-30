@@ -1,12 +1,13 @@
 package server
 
 import (
-	"codeberg.org/miekg/dns"
-	"codeberg.org/miekg/dns/rdata"
 	"context"
-	"github.com/marttimourujarvi/httproute-dns/internal/dnsstore"
 	"log"
 	"net/netip"
+
+	"codeberg.org/miekg/dns"
+	"codeberg.org/miekg/dns/rdata"
+	"github.com/marttimourujarvi/gateway-dns/internal/dnsstore"
 )
 
 type handler struct {
