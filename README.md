@@ -52,3 +52,13 @@ A Dockerfile and deploy manifests are included. See `deploy/` and `Makefile` for
 | `internal/dnsstore/store.go`  | Thread-safe in-memory A-record store      |
 | `internal/controller/`        | Gateway API reconciler                    |
 | `deploy/`                     | Kubernetes manifests                      |
+
+## Release process
+
+This repo follows **trunk-based development**:
+
+1. Merge feature / fix PRs directly to `main` as often as needed.
+2. When you are ready to cut a release, go to **Actions → Release Please** and click **Run workflow** (or wait for the weekly Monday cron).
+3. Review the generated Release PR, then merge it.
+4. Merging the Release PR creates a GitHub Release + tag, which triggers the **Release** workflow to build and push the multi-arch Docker image.
+5. If you ever need to rebuild a Docker image for an existing tag, go to **Actions → Release** and run it manually with the desired tag.

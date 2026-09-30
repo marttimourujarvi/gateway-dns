@@ -1,9 +1,11 @@
 name: Release Please
 
 on:
-  push:
-    branches:
-      - main
+  # Manual trigger: run when you decide a batch of changes is ready to ship.
+  workflow_dispatch:
+  # Weekly cron: keeps the release PR up-to-date without daily noise.
+  schedule:
+    - cron: "0 9 * * 1"
 
 permissions:
   contents: write
