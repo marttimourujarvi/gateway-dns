@@ -3,6 +3,12 @@ name: Release
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Git tag to build and push (e.g. v0.1.0)"
+        required: true
+        type: string
 
 env:
   REGISTRY: docker.io
@@ -13,8 +19,19 @@ jobs:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
     steps:
+      - name: Determine tag
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout tag
         uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.vars.outputs.tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -34,8 +51,8 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ github.ref_name }}
-            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
+            type=raw,value=${{ steps.vars.outputs.tag }}
+            type=raw,value=latest,enable=${{ !contains(steps.vars.outputs.tag, '-') }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
